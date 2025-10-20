@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AS-3: Appointment Setting Scripts | Buzzworks VA</title>
+    <script>
+        function copyScript(scriptId) {
+            var script = document.getElementById(scriptId);
+            var text = script.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                var btn = event.target;
+                var originalText = btn.innerText;
+                btn.innerText = '✅ Copied!';
+                setTimeout(function() {
+                    btn.innerText = originalText;
+                }, 2000);
+            });
+        }
+
+        function showScript(scriptName) {
+            var scripts = document.getElementsByClassName('script-content');
+            var buttons = document.getElementsByClassName('script-nav-btn');
+            
+            for (var i = 0; i < scripts.length; i++) {
+                scripts[i].classList.remove('active');
+            }
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            
+            document.getElementById(scriptName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleSection(sectionId) {
+            var section = document.getElementById(sectionId);
+            var icon = event.target.querySelector('.toggle-icon');
+            
+            if (section.style.display === 'none' || section.style.display === '') {
+                section.style.display = 'block';
+                if (icon) icon.innerText = '▼';
+            } else {
+                section.style.display = 'none';
+                if (icon) icon.innerText = '▶';
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --sage: #8b9d83;
+            --peach: #f6b5a7;
+            --mint: #c9d8c5;
+            --cream: #f8f9f6;
+            --dark: #2d3e2d;
+            --text: #3d4d3d;
+            --blue: #4dabf7;
+            --green: #51cf66;
+            --yellow: #ffd43b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--sage) 0%, var(--mint) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            opacity: 0.95;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .intro-section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--peach);
+        }
+
+        .section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .section h2 {
+            color: var(--sage);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--mint);
+        }
+
+        .section h3 {
+            color: var(--dark);
+            font-size: 1.4rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, var(--mint) 0%, var(--cream) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--sage);
+        }
+
+        .tip-box strong {
+            color: var(--dark);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 3px solid #ffc107;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box strong {
+            color: #856404;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .script-navigation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .script-nav-btn {
+            padding: 1.5rem;
+            background: var(--cream);
+            border: 2px solid var(--mint);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: left;
+        }
+
+        .script-nav-btn:hover {
+            background: var(--mint);
+            transform: translateY(-2px);
+        }
+
+        .script-nav-btn.active {
+            background: linear-gradient(135deg, var(--sage) 0%, var(--mint) 100%);
+            color: white;
+            border-color: var(--sage);
+        }
+
+        .script-icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .script-content {
+            display: none;
+        }
+
+        .script-content.active {
+            display: block;
+        }
+
+        .script-box {
+            background: #f8f8f8;
+            border: 3px solid var(--mint);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            font-family: 'Courier New', monospace;
+            line-height: 2;
+            font-size: 1.05rem;
+        }
+
+        .script-label {
+            background: var(--sage);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: inline-block;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .copy-script-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--sage);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .copy-script-btn:hover {
+            background: var(--dark);
+            transform: translateY(-2px);
+        }
+
+        .script-stage {
+            background: white;
+            border-left: 4px solid var(--blue);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .stage-title {
+            font-weight: 600;
+            color: var(--blue);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .dialogue-line {
+            margin: 1rem 0;
+            padding: 0.75rem;
+            border-radius: 6px;
+        }
+
+        .va-line {
+            background: rgba(139, 157, 131, 0.1);
+            border-left: 3px solid var(--sage);
+        }
+
+        .prospect-line {
+            background: rgba(77, 171, 247, 0.1);
+            border-left: 3px solid var(--blue);
+        }
+
+        .action-line {
+            background: rgba(255, 212, 59, 0.1);
+            border-left: 3px solid var(--yellow);
+            font-style: italic;
+        }
+
+        .speaker {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .qualification-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .qualification-card {
+            background: var(--cream);
+            border: 2px solid var(--mint);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .qual-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .qual-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .collapsible-section {
+            background: var(--cream);
+            border: 2px solid var(--mint);
+            border-radius: 12px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .collapsible-header {
+            background: var(--mint);
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .collapsible-header:hover {
+            background: var(--sage);
+            color: white;
+        }
+
+        .toggle-icon {
+            font-size: 1.2rem;
+        }
+
+        .collapsible-content {
+            padding: 1.5rem;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .script-navigation {
+                grid-template-columns: 1fr;
+            }
+
+            .script-box {
+                font-size: 0.95rem;
+                padding: 1rem;
+            }
+
+            .copy-script-btn {
+                position: static;
+                display: block;
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">BUZZWORKS VA</div>
+        <h1>MODULE AS-3</h1>
+        <div class="subtitle">Appointment Setting Scripts</div>
+        <div class="meta-info">
+            <div class="meta-item">
+                <span>⏱️</span>
+                <span>Duration: 5 Hours</span>
+            </div>
+            <div class="meta-item">
+                <span>📚</span>
+                <span>Week 2 - Role-Specific Training</span>
+            </div>
+            <div class="meta-item">
+                <span>🎯</span>
+                <span>Phase 2A</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="intro-section">
+            <h2>Your Complete Script Library</h2>
+            <p>Scripts are your safety net, not your prison. The best appointment setters use scripts as a foundation but sound natural and conversational. These 8 master scripts cover every common scenario you'll encounter. Study them, practice them, and then make them your own.</p>
+            
+            <div class="tip-box" style="margin-top: 1.5rem;">
+                <strong>🎯 How to Use These Scripts:</strong>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li><strong>Week 1:</strong> Read and memorize the structure (Opening → Qualification → Close)</li>
+                    <li><strong>Week 2:</strong> Practice reading them out loud until they feel natural</li>
+                    <li><strong>Week 3:</strong> Customize them with your agent's name, style, and market specifics</li>
+                    <li><strong>Week 4:</strong> Use them on real calls, adjusting based on prospect responses</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Critical Rule:</strong>
+                Never sound like you're reading. Scripts are training wheels. Once you've internalized the structure, speak naturally. Prospects can tell when you're reading, and it kills trust.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Script Navigation</h2>
+            <p>Click any script below to view the complete dialogue, qualification questions, and branching paths.</p>
+            
+            <div class="script-navigation">
+                <button class="script-nav-btn active" onclick="showScript('script1')">
+                    <span class="script-icon">🔥</span><br>
+                    <strong>Script 1:</strong> Warm Lead - Buyer Inquiry
+                </button>
+                <button class="script-nav-btn" onclick="showScript('script2')">
+                    <span class="script-icon">🏠</span><br>
+                    <strong>Script 2:</strong> Warm Lead - Seller Inquiry
+                </button>
+                <button class="script-nav-btn" onclick="showScript('script3')">
+                    <span class="script-icon">❄️</span><br>
+                    <strong>Script 3:</strong> Cold/Dormant Lead Re-engagement
+                </button>
+                <button class="script-nav-btn" onclick="showScript('script4')">
+                    <span class="script-icon">⏰</span><br>
+                    <strong>Script 4:</strong> Expired Listing Follow-up
+                </button>
+                <button class="script-nav-btn" onclick="showScript('script5')">
+                    <span class="script-icon">🚪</span><br>
+                    <strong>Script 5:</strong> Open House Follow-up
+                </button>
+                <button class="script-nav-btn" onclick="showScript('script6')">
+                    <span class="script-icon">🤝</span><br>
+                    <strong>Script 6:</strong> Referral Lead
+                </button>
+                <button class="script-nav-btn" onclick="showScript('script7')">
+                    <span class="script-icon">✅</span><br>
+                    <strong>Script 7:</strong> Appointment Confirmation
+                </button>
+                <button class="script-nav-btn" onclick="showScript('script8')">
+                    <span class="script-icon">📞</span><br>
+                    <strong>Script 8:</strong> No-Show Follow-up
+                </button>
+            </div>
+        </div>
+
+        <!-- SCRIPT 1: WARM BUYER INQUIRY -->
+        <div id="script1" class="script-content active">
+            <div class="section">
+                <h2>Script 1: Warm Lead - Buyer Inquiry</h2>
+                <p><strong>Use When:</strong> Prospect has inquired about a property online, filled out a buyer form, or requested information.</p>
+                <p><strong>Goal:</strong> Qualify the buyer and book them for an intro call with the agent.</p>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 1: Opening (First 10 Seconds)</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script1-opening')">📋 Copy Script</button>
+                        <div id="script1-opening">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Hi [Name], this is [Your Name] calling from [Agent Name]'s team. How are you today?"
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[PAUSE - Wait for response. Build micro-rapport]</div>
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Great! I'm calling because you inquired about [property address / homes in the area] online. Is that something you're still interested in?"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">❓ STAGE 2: Qualification Questions</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script1-qualification')">📋 Copy Script</button>
+                        <div id="script1-qualification">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Wonderful! Just to make sure we're showing you homes that fit what you're looking for, can I ask you a few quick questions?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Q1 - Timeline:</div>
+"First, what's your timeline? Are you looking to buy in the next 30 days, 3 months, or just getting started?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Q2 - Area:</div>
+"And what areas are you focusing on? I saw you looked at [property area] - is that your top choice, or are you open to other neighborhoods?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Q3 - Property Type:</div>
+"What type of property are you looking for? How many bedrooms and bathrooms do you need?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Q4 - Budget:</div>
+"And what's your budget range? Have you spoken with a lender yet to get pre-approved?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Q5 - Motivation:</div>
+"Can I ask what's driving your move? Are you relocating, upgrading, first-time buyer?"
+</div>
+                        </div>
+                    </div>
+
+                    <div class="qualification-grid">
+                        <div class="qualification-card">
+                            <div class="qual-icon">⏰</div>
+                            <div class="qual-title">Timeline</div>
+                            <p>Hot: 0-30 days<br>Warm: 1-6 months<br>Cold: 6+ months</p>
+                        </div>
+
+                        <div class="qualification-card">
+                            <div class="qual-icon">📍</div>
+                            <div class="qual-title">Location Clarity</div>
+                            <p>Focused on ONE area = more serious<br>Multiple areas = still exploring</p>
+                        </div>
+
+                        <div class="qualification-card">
+                            <div class="qual-icon">💰</div>
+                            <div class="qual-title">Financial Readiness</div>
+                            <p>Pre-approved = ready to act<br>Not pre-approved = education needed</p>
+                        </div>
+
+                        <div class="qualification-card">
+                            <div class="qual-icon">🎯</div>
+                            <div class="qual-title">Motivation Level</div>
+                            <p>Why are they buying?<br>Life event = higher urgency</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 3: Appointment Booking</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script1-close')">📋 Copy Script</button>
+                        <div id="script1-close">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Perfect! Based on what you've shared, I think [Agent Name] would be a great fit to help you. Would you be available for a quick 15-minute call with [him/her] tomorrow at 10 AM, or would 2 PM work better?"
+</div>
+
+<div class="dialogue-line prospect-line">
+<div class="speaker">PROSPECT:</div>
+"2 PM works."
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Perfect! I'm putting you down for tomorrow, [full date], at 2 PM. You'll receive a calendar invite with a Zoom link in the next few minutes. Can you confirm this email is correct: [email]?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Great! And does this phone number [number] work for the agent to call you if needed?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Wonderful! So just to recap: tomorrow at 2 PM, you'll get a Zoom link via email, and [Agent Name] will walk you through homes in [area] that match what you're looking for. Have a great day!"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('script1-branch1')">
+                        <span>🔀 Objection: "I'm not sure I'm still interested"</span>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="collapsible-content" id="script1-branch1">
+                        <div class="script-box">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"I totally understand! Can I ask - did you already find something, or is it just not the right time?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF "Found something":</div>
+"That's great! Congratulations! Just curious - have you closed yet or are you still in process?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF "Not the right time":</div>
+"No problem! When do you think you'll be ready to start looking seriously? Perfect - can I follow up with you in [timeframe]?"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('script1-branch2')">
+                        <span>🔀 Objection: "I'm working with another agent"</span>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="collapsible-content" id="script1-branch2">
+                        <div class="script-box">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"That's great! Are you under an exclusive buyer agreement with them, or are you still interviewing agents?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF Exclusive:</div>
+"Got it! Best of luck with your search. If anything changes, feel free to reach out!"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF Not exclusive:</div>
+"I understand! Would you be open to a quick second opinion? [Agent Name] specializes in [area] and might have access to properties your current agent doesn't. Would a 15-minute call work?"
+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCRIPT 2: WARM SELLER INQUIRY -->
+        <div id="script2" class="script-content">
+            <div class="section">
+                <h2>Script 2: Warm Lead - Seller Inquiry</h2>
+                <p><strong>Use When:</strong> Prospect has requested a home valuation, filled out a seller form, or inquired about listing their property.</p>
+                <p><strong>Goal:</strong> Qualify the seller and book a listing consultation with the agent.</p>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 1: Opening</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script2-opening')">📋 Copy Script</button>
+                        <div id="script2-opening">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Hi [Name], this is [Your Name] calling from [Agent Name]'s office. How are you today?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Great! I'm calling because you requested information about selling your home at [address]. Are you still thinking about selling?"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">❓ STAGE 2: Qualification Questions</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script2-qualification')">📋 Copy Script</button>
+                        <div id="script2-qualification">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Perfect! So I can prepare the best information for you, can I ask a few quick questions?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Q1 - Timeline:</div>
+"What's your timeline for selling? Are you hoping to list in the next 30 days, or are you still exploring your options?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Q2 - Motivation:</div>
+"What's prompting the move? Are you relocating, upsizing, downsizing?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Q3 - Property Details:</div>
+"Tell me about your home - how many bedrooms and bathrooms? Any recent updates or renovations?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Q4 - Price Expectations:</div>
+"Have you thought about what you'd like to list it for? Do you have a number in mind?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Q5 - Agent Status:</div>
+"Have you already interviewed any agents, or are you just starting the process?"
+</div>
+                        </div>
+                    </div>
+
+                    <div class="qualification-grid">
+                        <div class="qualification-card">
+                            <div class="qual-icon">⏰</div>
+                            <div class="qual-title">Seller Timeline</div>
+                            <p>30 days = Hot<br>90 days = Warm<br>6+ months = Nurture</p>
+                        </div>
+
+                        <div class="qualification-card">
+                            <div class="qual-icon">🏠</div>
+                            <div class="qual-title">Property Condition</div>
+                            <p>Move-in ready = easier sale<br>Needs work = pricing discussion</p>
+                        </div>
+
+                        <div class="qualification-card">
+                            <div class="qual-icon">💭</div>
+                            <div class="qual-title">Price Realistic?</div>
+                            <p>Check market comps<br>Manage expectations early</p>
+                        </div>
+
+                        <div class="qualification-card">
+                            <div class="qual-icon">🤝</div>
+                            <div class="qual-title">Agent Competition</div>
+                            <p>No agent yet = opportunity<br>Interviewing = book fast</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 3: Appointment Booking</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script2-close')">📋 Copy Script</button>
+                        <div id="script2-close">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Excellent! [Agent Name] has sold [X] homes in your area in the past year and would love to provide you with a free market analysis and custom marketing plan. Would you prefer a virtual consultation or an in-person walk-through of your property?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Perfect! Would Wednesday at 3 PM work, or is Thursday morning better?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Great! I have you down for [day, date, time]. You'll receive a calendar invite. [Agent Name] will bring comparable sales data and a full marketing presentation. Is there anything specific you'd like [him/her] to prepare?"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('script2-branch1')">
+                        <span>🔀 Objection: "I'm just getting an idea of value"</span>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="collapsible-content" id="script2-branch1">
+                        <div class="script-box">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"That makes total sense! Most people start there. [Agent Name] can provide you with a detailed market analysis that shows exactly what homes like yours are selling for right now - no pressure, just accurate information. Would a 20-minute virtual call work to go over the numbers?"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('script2-branch2')">
+                        <span>🔀 Objection: "Can you just email me the value?"</span>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="collapsible-content" id="script2-branch2">
+                        <div class="script-box">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"I can definitely send you some initial information, but honestly, those automated estimates can be off by $50,000 or more. [Agent Name] will walk your property (virtually or in person) and give you an accurate price based on current buyer demand in your specific neighborhood. It's much more valuable than a generic email. Does tomorrow afternoon work for a quick call?"
+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCRIPT 3: COLD/DORMANT LEAD -->
+        <div id="script3" class="script-content">
+            <div class="section">
+                <h2>Script 3: Cold/Dormant Lead Re-engagement</h2>
+                <p><strong>Use When:</strong> Lead inquired 3+ months ago with no follow-up, or database contact that went cold.</p>
+                <p><strong>Goal:</strong> Re-establish contact and gauge current interest level.</p>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 1: Opening</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script3-opening')">📋 Copy Script</button>
+                        <div id="script3-opening">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Hi [Name], this is [Your Name] from [Agent Name]'s team. How are you?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"I'm calling because you reached out to us back in [month] about [buying/selling] in [area]. I wanted to check in and see if that's still something you're interested in, or if your plans have changed?"
+</div>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>💡 Key Strategy:</strong>
+                        <p>Cold leads need a soft touch. You're not selling - you're checking in. Keep it casual and give them an easy out.</p>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">❓ STAGE 2: Temperature Check</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script3-qualification')">📋 Copy Script</button>
+                        <div id="script3-qualification">
+<div class="dialogue-line va-line">
+<div class="speaker">IF Still Interested:</div>
+"That's great to hear! What's held you back so far - just timing, or have there been other factors?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Follow-up Questions:</div>
+"What would need to happen for you to move forward in the next 30-60 days?"
+"Are you still looking in the same area, or have your preferences changed?"
+"Have you been working with another agent, or are you still looking for the right fit?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF Not Interested Anymore:</div>
+"No problem! Can I ask what changed? Did you find something already, or did the timing just not work out?"
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[If they bought/sold elsewhere, congratulate and close gracefully]</div>
+<div class="speaker">[If timing changed, ask when to follow up]</div>
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 3: Re-engagement Close</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script3-close')">📋 Copy Script</button>
+                        <div id="script3-close">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"I appreciate you being honest with me. Since the market has changed quite a bit since [month when they first inquired], would you be open to a quick 10-minute update call with [Agent Name]? [He/She] can show you what's happening right now - no pressure, just information."
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Alternative Soft Close:</div>
+"How about this - I'll send you [Agent Name]'s market update email for [area]. If anything catches your eye, just reply and we'll set up a call. Sound fair?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Last Resort - Stay in Touch:</div>
+"No worries at all! Can I add you to our monthly market updates? That way you'll stay in the loop, and when you're ready, you know who to call."
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('script3-branch1')">
+                        <span>🔀 Path: "I forgot I even inquired"</span>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="collapsible-content" id="script3-branch1">
+                        <div class="script-box">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Ha! That happens - I totally understand. Well, now that I have you - are you still thinking about [buying/selling], or was that just a passing thought at the time?"
+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCRIPT 4: EXPIRED LISTING -->
+        <div id="script4" class="script-content">
+            <div class="section">
+                <h2>Script 4: Expired Listing Follow-up</h2>
+                <p><strong>Use When:</strong> A property listing expired without selling.</p>
+                <p><strong>Goal:</strong> Book a re-listing consultation with the agent.</p>
+
+                <div class="warning-box">
+                    <strong>⚠️ Sensitivity Alert:</strong>
+                    Expired listings are frustrated sellers. They're disappointed, possibly angry at their previous agent, and skeptical. Approach with empathy, not pushiness.
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 1: Opening</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script4-opening')">📋 Copy Script</button>
+                        <div id="script4-opening">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Hi [Name], this is [Your Name] calling from [Agent Name]'s office. How are you today?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"I noticed your listing at [address] recently came off the market. I wanted to reach out to see if you're still interested in selling, or if your plans have changed?"
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[DO NOT say "I see your listing expired" - too negative. Say "came off the market"]</div>
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">❓ STAGE 2: Empathy + Discovery</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script4-qualification')">📋 Copy Script</button>
+                        <div id="script4-qualification">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"I can imagine that was frustrating. Can I ask - do you feel like you know why it didn't sell?"
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[LISTEN. Let them vent. Common answers: price, marketing, agent wasn't active]</div>
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Follow-up Questions:</div>
+"How many showings did you get while it was listed?"
+"What kind of feedback did buyers give?"
+"Are you planning to re-list with the same agent, or are you considering other options?"
+"What would you do differently this time?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Critical Question:</div>
+"If you could sell in the next 60 days at the right price with the right agent, would you still want to?"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 3: Positioning + Close</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script4-close')">📋 Copy Script</button>
+                        <div id="script4-close">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"I appreciate you sharing that. [Agent Name] has successfully sold [X] homes in [area] this year, including [specific example if possible]. [He/She] has a different approach - aggressive marketing, better pricing strategy, and constant communication."
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Would you be open to a no-obligation consultation where [Agent Name] can review what went wrong and show you exactly how [he/she] would do things differently? It's completely free, and you'll walk away with a clear plan - whether you work with us or not."
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Would Wednesday or Friday work better for you?"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('script4-branch1')">
+                        <span>🔀 Objection: "I'm re-listing with the same agent"</span>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="collapsible-content" id="script4-branch1">
+                        <div class="script-box">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"That's great that you're giving them another chance! Can I ask - what are they planning to do differently this time?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Just out of curiosity, would you be open to a second opinion before you re-list? [Agent Name] could review the strategy and give you some ideas - might even help your current agent sell it faster. No pressure at all."
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('script4-branch2')">
+                        <span>🔀 Objection: "The price was fine, we just had bad luck"</span>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="collapsible-content" id="script4-branch2">
+                        <div class="script-box">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"I hear you. Sometimes timing matters. But I will say - if a home is priced correctly and marketed aggressively, it usually sells within 30-45 days in this market. Would you be open to seeing a current market analysis? [Agent Name] can show you what similar homes are actually selling for right now, not what they were listed at."
+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCRIPT 5: OPEN HOUSE FOLLOW-UP -->
+        <div id="script5" class="script-content">
+            <div class="section">
+                <h2>Script 5: Open House Follow-up</h2>
+                <p><strong>Use When:</strong> Following up with someone who attended an open house.</p>
+                <p><strong>Goal:</strong> Qualify their interest and book a showing or consultation.</p>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 1: Opening</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script5-opening')">📋 Copy Script</button>
+                        <div id="script5-opening">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Hi [Name], this is [Your Name] from [Agent Name]'s team. How are you?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Thanks for stopping by the open house at [address] this past [day]! I wanted to follow up and see what you thought of the property."
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">❓ STAGE 2: Feedback + Qualification</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script5-qualification')">📋 Copy Script</button>
+                        <div id="script5-qualification">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"On a scale of 1-10, where would you rate your interest in that home?"
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[If 7+, they're interested. If 5-6, probe deeper. If below 5, ask what they're really looking for]</div>
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Follow-up Questions:</div>
+"What did you love about it? What didn't work for you?"
+"How does it compare to other homes you've seen?"
+"Are you currently working with an agent, or are you looking on your own?"
+"What's your timeline for making a decision?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Key Question:</div>
+"If that home checked all your boxes, would you be ready to make an offer, or are you still in the early stages?"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 3: Next Steps</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script5-close')">📋 Copy Script</button>
+                        <div id="script5-close">
+<div class="dialogue-line va-line">
+<div class="speaker">IF Highly Interested (7+ rating):</div>
+"That's great! Would you like to schedule a private showing so you can really take your time and ask questions? Or if you're ready, [Agent Name] can walk you through the offer process. Which would be more helpful?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF Moderately Interested (5-6 rating):</div>
+"I understand - it's important to see all your options. [Agent Name] has access to homes that aren't even on the market yet. Would you be open to a quick call so [he/she] can show you other properties that might be a better fit?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF Low Interest (Below 5):</div>
+"No problem! Knowing what you don't want is just as important as knowing what you do want. Based on what you've shared, [Agent Name] can set you up with alerts for homes that match your criteria better. Would that be helpful?"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('script5-branch1')">
+                        <span>🔀 Response: "Just browsing, not serious yet"</span>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="collapsible-content" id="script5-branch1">
+                        <div class="script-box">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"That's totally fine! Most people start that way. When do you think you'll be ready to get more serious - 3 months, 6 months, a year?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Perfect! I'll add you to our VIP list so you get early access to new listings before they hit the market. And when you're ready to get serious, [Agent Name] will already know what you're looking for. Sound good?"
+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCRIPT 6: REFERRAL LEAD -->
+        <div id="script6" class="script-content">
+            <div class="section">
+                <h2>Script 6: Referral Lead</h2>
+                <p><strong>Use When:</strong> Someone was referred by a past client, friend, or business partner.</p>
+                <p><strong>Goal:</strong> Leverage the referral relationship to build instant trust and book appointment.</p>
+
+                <div class="tip-box">
+                    <strong>💡 Referral Advantage:</strong>
+                    <p>Referrals convert 4x higher than cold leads because trust is pre-established. Always mention the referrer's name early and often.</p>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 1: Opening</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script6-opening')">📋 Copy Script</button>
+                        <div id="script6-opening">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Hi [Name], this is [Your Name] calling from [Agent Name]'s team. How are you today?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"I'm calling because [Referrer Name] mentioned you're thinking about [buying/selling] and suggested we connect. [He/She] had such a great experience working with [Agent Name], and I wanted to reach out personally."
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[Pause for their response - they'll usually say something positive about the referrer]</div>
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">❓ STAGE 2: Soft Qualification</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script6-qualification')">📋 Copy Script</button>
+                        <div id="script6-qualification">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"[Referrer Name] mentioned you're looking to [buy/sell] - is that right?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Great! Can you tell me a bit about what you're looking for? Just so I can make sure [Agent Name] is prepared when you two connect."
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">Quick Qualifying Questions:</div>
+"What's your timeline looking like?"
+"Have you started looking seriously, or are you just beginning to explore?"
+"Did [Referrer Name] tell you about [Agent's unique selling point]?"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 3: Easy Close</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script6-close')">📋 Copy Script</button>
+                        <div id="script6-close">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Perfect! [Agent Name] would love to help you just like [he/she] helped [Referrer Name]. Would you be available for a quick intro call tomorrow, or would later this week work better?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Wonderful! I'm putting you down for [day, time]. You'll get a calendar invite shortly. [Agent Name] is really excited to work with you - [Referrer Name] only sends [his/her] best friends our way!"
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[Referrals are warm - close confidently. They're already pre-sold]</div>
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('script6-branch1')">
+                        <span>🔀 Response: "I need to think about it"</span>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="collapsible-content" id="script6-branch1">
+                        <div class="script-box">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Of course! I totally understand. Can I ask - is it the timing, or do you have some questions you'd like answered first?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"You know what - why don't we schedule a quick 10-minute call with [Agent Name]? No pressure at all - [he/she] can answer your questions, and then you can decide if it makes sense to move forward. Fair enough?"
+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCRIPT 7: APPOINTMENT CONFIRMATION -->
+        <div id="script7" class="script-content">
+            <div class="section">
+                <h2>Script 7: Appointment Confirmation (24 Hours Before)</h2>
+                <p><strong>Use When:</strong> Confirming an appointment scheduled 24 hours in advance.</p>
+                <p><strong>Goal:</strong> Reduce no-shows by confirming attendance and building excitement.</p>
+
+                <div class="warning-box">
+                    <strong>⚠️ Critical Timing:</strong>
+                    Always confirm appointments 24 hours before. This single action can reduce no-shows by 50%.
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 1: Quick Confirmation</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script7-confirm')">📋 Copy Script</button>
+                        <div id="script7-confirm">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Hi [Name], this is [Your Name] from [Agent Name]'s office. I'm calling to confirm your appointment tomorrow at [time]. Are we still good?"
+</div>
+
+<div class="dialogue-line prospect-line">
+<div class="speaker">IF YES:</div>
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Perfect! Just a quick reminder - it's a [virtual/in-person] meeting, and [Agent Name] will be covering [specific topics]. Do you have the Zoom link / Do you have the address?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Great! Is there anything specific you'd like [Agent Name] to focus on or prepare for your call?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Wonderful! We're looking forward to it. See you tomorrow at [time]!"
+</div>
+
+<div class="dialogue-line prospect-line">
+<div class="speaker">IF NO / NEEDS TO RESCHEDULE:</div>
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"No problem! Life happens. Would later this week work better, or should we look at next week?"
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[Reschedule immediately - don't let them off the phone without a new time]</div>
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>🎯 Confirmation Best Practices:</strong>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>Call 24 hours before (not too early, not last-minute)</li>
+                        <li>Keep it short - 60 seconds max</li>
+                        <li>Confirm meeting format (Zoom vs in-person)</li>
+                        <li>Ask if they have questions - builds engagement</li>
+                        <li>If you can't reach them, leave a voicemail AND send a text</li>
+                    </ul>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">📱 Text/SMS Confirmation Alternative</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script7-sms')">📋 Copy Script</button>
+                        <div id="script7-sms">
+<div class="dialogue-line va-line">
+<div class="speaker">SMS TEMPLATE:</div>
+"Hi [Name]! This is [Your Name] from [Agent Name]'s team. Just confirming your appointment tomorrow at [time]. Reply YES to confirm or let me know if you need to reschedule. Looking forward to it!"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('script7-branch1')">
+                        <span>📧 Email Confirmation Template</span>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="collapsible-content" id="script7-branch1">
+                        <div class="script-box" style="font-family: 'Segoe UI', sans-serif;">
+<strong>Subject: Appointment Confirmation - Tomorrow at [Time]</strong>
+
+Hi [Name],
+
+This is a friendly reminder that you have an appointment with [Agent Name] scheduled for:
+
+📅 [Day, Full Date]
+🕐 [Time] [Timezone]
+📍 [Location/Zoom Link]
+
+[Agent Name] is looking forward to discussing [specific topic - ex: "homes in your target area" or "your listing strategy"].
+
+Please reply to this email or call/text [phone number] if you need to reschedule.
+
+See you tomorrow!
+
+[Your Name]
+[Agent Name]'s Team
+[Phone Number]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCRIPT 8: NO-SHOW FOLLOW-UP -->
+        <div id="script8" class="script-content">
+            <div class="section">
+                <h2>Script 8: No-Show Follow-up</h2>
+                <p><strong>Use When:</strong> Prospect missed their scheduled appointment.</p>
+                <p><strong>Goal:</strong> Reschedule without sounding annoyed or desperate.</p>
+
+                <div class="warning-box">
+                    <strong>⚠️ Mindset Shift:</strong>
+                    Don't take no-shows personally. 60% of no-shows will reschedule if you follow up correctly. Stay professional and empathetic.
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">🎯 STAGE 1: Immediate Follow-up (Within 15 Minutes)</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script8-immediate')">📋 Copy Script</button>
+                        <div id="script8-immediate">
+<div class="dialogue-line va-line">
+<div class="speaker">FIRST CALL (Within 15 min of missed appt):</div>
+"Hi [Name], this is [Your Name] from [Agent Name]'s office. We had you scheduled for [time] today - just wanted to make sure everything's okay! Give me a call back when you get this."
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[Keep it concerned, not accusatory. They might have had an emergency]</div>
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IMMEDIATE SMS:</div>
+"Hi [Name], we missed you on the call today at [time]. Everything okay? Let me know if you need to reschedule - [Agent Name] is still happy to help!"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">📞 STAGE 2: Follow-up Call (If They Answer)</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script8-callback')">📋 Copy Script</button>
+                        <div id="script8-callback">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"Hi [Name]! I tried calling earlier - we missed you for your appointment at [time]. Is everything alright?"
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[Listen to their reason. Common responses: forgot, emergency, busy, changed mind]</div>
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF Legitimate Emergency:</div>
+"I completely understand - life happens! [Agent Name] is still excited to speak with you. Would tomorrow work, or should we look at next week?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF They Forgot:</div>
+"No worries! I know everyone's busy. Since [Agent Name] already prepared [market analysis / property list / custom plan] for you, can we find a quick 15 minutes in the next day or two?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF Vague/Evasive:</div>
+"I understand. Can I ask - are you still interested in [buying/selling], or is now not the right time?"
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[If they're still interested, reschedule IMMEDIATELY. Don't say "let me know when works"]</div>
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-stage">
+                    <div class="stage-title">📧 STAGE 3: Email Follow-up (If No Answer)</div>
+                    
+                    <div class="script-box">
+                        <button class="copy-script-btn" onclick="copyScript('script8-email')">📋 Copy Script</button>
+                        <div id="script8-email" style="font-family: 'Segoe UI', sans-serif;">
+<strong>Subject: We Missed You Today - Are You Still Interested?</strong>
+
+Hi [Name],
+
+We missed you for your appointment today at [time] with [Agent Name]. I completely understand things come up!
+
+[Agent Name] had prepared [specific deliverable - market analysis, property list, custom plan] for you, and I'd hate for that to go to waste.
+
+Are you still interested in [buying/selling]? If so, I have availability:
+• Tomorrow at [time]
+• [Day] at [time]
+• [Day] at [time]
+
+Just reply with which time works best, or let me know if you need a different option.
+
+Looking forward to hearing from you!
+
+[Your Name]
+[Agent Name]'s Team
+[Phone Number]
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('script8-branch1')">
+                        <span>🔀 Response: "I'm not interested anymore"</span>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="collapsible-content" id="script8-branch1">
+                        <div class="script-box">
+<div class="dialogue-line va-line">
+<div class="speaker">YOU:</div>
+"I appreciate you being honest with me. Can I ask what changed? Did you find someone else to work with, or is it just timing?"
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF Timing:</div>
+"No problem at all. When do you think you'll be ready? I'll follow up with you then."
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF Found Someone Else:</div>
+"That's great! Best of luck with your [purchase/sale]. If anything changes, feel free to reach out."
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[Stay gracious. Don't burn bridges. They might come back]</div>
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('script8-branch2')">
+                        <span>📅 Second No-Show Protocol</span>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="collapsible-content" id="script8-branch2">
+                        <div class="script-box">
+<div class="dialogue-line va-line">
+<div class="speaker">IF They No-Show a SECOND Time:</div>
+"Hi [Name], I noticed we had another scheduling conflict today. I want to make sure I'm not wasting your time or [Agent Name]'s time. Are you genuinely interested in moving forward, or would you prefer we check back in with you in a few months?"
+</div>
+
+<div class="dialogue-line action-line">
+<div class="speaker">[Be direct but respectful. Two no-shows = low priority lead]</div>
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF Still Interested:</div>
+"Great! I'm going to need a firm commitment from you this time. Can you commit to [specific day/time]? I'll send you 3 reminders leading up to it."
+</div>
+
+<div class="dialogue-line va-line">
+<div class="speaker">IF Not Interested:</div>
+"No worries! I'll move you to our monthly newsletter list, and when you're ready, just reach out. Sound good?"
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>🎯 No-Show Recovery Tips:</strong>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>Speed matters:</strong> Follow up within 15 minutes of the missed appointment</li>
+                        <li><strong>Multi-channel approach:</strong> Call, text, AND email within the first hour</li>
+                        <li><strong>Don't guilt-trip:</strong> Stay professional and understanding</li>
+                        <li><strong>Make rescheduling easy:</strong> Offer 2-3 specific times, don't ask "when works for you"</li>
+                        <li><strong>Set a boundary:</strong> After 2 no-shows, deprioritize the lead</li>
+                        <li><strong>Update your CRM:</strong> Note the no-show and follow-up attempts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- CUSTOMIZATION GUIDE SECTION -->
+        <div class="section" style="margin-top: 3rem;">
+            <h2>🎨 Script Customization Guide</h2>
+            <p>Every agent is different, and every market is unique. Here's how to customize these scripts to fit your specific situation.</p>
+
+            <div class="qualification-grid">
+                <div class="qualification-card">
+                    <div class="qual-icon">👤</div>
+                    <div class="qual-title">Agent Personality</div>
+                    <p><strong>Formal Agent:</strong> Use professional language, "Mr./Ms.", structured approach</p>
+                    <p><strong>Casual Agent:</strong> Use first names, friendly tone, conversational style</p>
+                    <p><strong>Tech-Savvy:</strong> Emphasize digital tools, virtual tours, online processes</p>
+                </div>
+
+                <div class="qualification-card">
+                    <div class="qual-icon">🏘️</div>
+                    <div class="qual-title">Market Type</div>
+                    <p><strong>Luxury Market:</strong> Emphasize exclusivity, privacy, white-glove service</p>
+                    <p><strong>First-Time Buyers:</strong> Educational tone, patient, explain processes</p>
+                    <p><strong>Investors:</strong> Focus on ROI, market data, investment potential</p>
+                </div>
+
+                <div class="qualification-card">
+                    <div class="qual-icon">📍</div>
+                    <div class="qual-title">Geographic Focus</div>
+                    <p><strong>Hyperlocal:</strong> "We specialize in [specific neighborhood]"</p>
+                    <p><strong>Regional:</strong> "We cover all of [county/metro area]"</p>
+                    <p><strong>Niche:</strong> "We focus on [waterfront/new construction/etc]"</p>
+                </div>
+
+                <div class="qualification-card">
+                    <div class="qual-icon">🏆</div>
+                    <div class="qual-title">Agent Credentials</div>
+                    <p>Insert specific stats:</p>
+                    <p>"Sold 47 homes in 2024"</p>
+                    <p>"Top 5% in the region"</p>
+                    <p>"20+ years experience"</p>
+                </div>
+            </div>
+
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('custom-variables')">
+                    <span>📝 Variables to Customize in Every Script</span>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="collapsible-content" id="custom-variables">
+                    <div style="padding: 1rem; background: white; border-radius: 8px; margin-top: 1rem;">
+                        <p><strong>Before you use these scripts, replace these variables:</strong></p>
+                        <ul style="margin-left: 2rem; margin-top: 1rem; line-height: 2;">
+                            <li><strong>[Agent Name]</strong> → Your agent's first and last name</li>
+                            <li><strong>[Your Name]</strong> → Your name (the VA's name)</li>
+                            <li><strong>[Area]</strong> → Specific city, neighborhood, or region</li>
+                            <li><strong>[Property address]</strong> → Actual property address from lead source</li>
+                            <li><strong>[X homes sold]</strong> → Actual number of transactions</li>
+                            <li><strong>[Unique selling point]</strong> → Agent's specialty (staging, negotiation, marketing, etc.)</li>
+                            <li><strong>[Zoom link]</strong> → Agent's personal Zoom room or calendar link</li>
+                            <li><strong>[Phone number]</strong> → Agent's direct line or office number</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('custom-opener')">
+                    <span>🗣️ Alternative Opening Lines (Pick Your Style)</span>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="collapsible-content" id="custom-opener">
+                    <div class="script-box">
+<strong>Professional/Formal:</strong>
+"Good morning/afternoon, [Name]. This is [Your Name] with [Agent Name] Real Estate. Do you have a quick moment?"
+
+<strong>Casual/Friendly:</strong>
+"Hey [Name], it's [Your Name] from [Agent Name]'s team! How's your day going?"
+
+<strong>Direct/No-Nonsense:</strong>
+"Hi [Name], [Your Name] here from [Agent Name]'s office. I'll keep this quick - you inquired about [property/area]. Still interested?"
+
+<strong>Value-First:</strong>
+"Hi [Name], this is [Your Name]. I have some information you requested about [area] - got a minute to chat?"
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('custom-close')">
+                    <span>🎯 Alternative Closing Lines (Pick Your Style)</span>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="collapsible-content" id="custom-close">
+                    <div class="script-box">
+<strong>Assumptive Close:</strong>
+"Perfect! Let me get you on the calendar. I have Tuesday at 2 PM or Wednesday at 10 AM. Which works better?"
+
+<strong>Choice Close:</strong>
+"Would you prefer a virtual consultation or in-person meeting?"
+
+<strong>Urgency Close:</strong>
+"[Agent Name] only has a few slots left this week. Would Wednesday or Thursday work?"
+
+<strong>Value Close:</strong>
+"This consultation is completely free, and you'll walk away with [specific deliverable]. When works best for you?"
+
+<strong>Trial Close:</strong>
+"Does a 15-minute intro call make sense as a next step?"
+
+<strong>Alternative Close:</strong>
+"Most people prefer to start with a quick phone call. Does that work for you, or would you rather meet in person right away?"
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRACTICE EXERCISES SECTION -->
+        <div class="section">
+            <h2>🎤 Practice Exercises</h2>
+            <p>Scripts are useless if you don't practice them. Here's how to train your team:</p>
+
+            <div class="qualification-grid">
+                <div class="qualification-card">
+                    <div class="qual-icon">📖</div>
+                    <div class="qual-title">Week 1: Read Aloud</div>
+                    <p>Read each script out loud 5 times. Time yourself. Target: 60-90 seconds per call.</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>Goal:</strong> Memorize structure, not exact words.</p>
+                </div>
+
+                <div class="qualification-card">
+                    <div class="qual-icon">🎭</div>
+                    <div class="qual-title">Week 2: Role-Play</div>
+                    <p>Practice with a colleague. They play the prospect, you handle objections.</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>Goal:</strong> Get comfortable with interruptions and pushback.</p>
+                </div>
+
+                <div class="qualification-card">
+                    <div class="qual-icon">🎙️</div>
+                    <div class="qual-title">Week 3: Record Yourself</div>
+                    <p>Record mock calls on your phone. Listen back. Fix awkward phrases.</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>Goal:</strong> Identify filler words, pace, tone issues.</p>
+                </div>
+
+                <div class="qualification-card">
+                    <div class="qual-icon">📞</div>
+                    <div class="qual-title">Week 4: Live Calls</div>
+                    <p>Use scripts on real leads. Start with warm leads, not cold calls.</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>Goal:</strong> Apply scripts naturally in real conversations.</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <strong>🎯 Practice Checklist:</strong>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li>✅ Read each script 5+ times out loud</li>
+                    <li>✅ Role-play with a partner (30 minutes minimum)</li>
+                    <li>✅ Record yourself and listen for improvements</li>
+                    <li>✅ Customize scripts with agent-specific details</li>
+                    <li>✅ Practice handling the 5 most common objections</li>
+                    <li>✅ Time your calls (should be 2-4 minutes max)</li>
+                    <li>✅ Get feedback from your agent or team lead</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- COMMON OBJECTIONS REFERENCE -->
+        <div class="section">
+            <h2>🛡️ Common Objections - Quick Reference</h2>
+            <p>Keep this section bookmarked. These are the objections you'll hear most often.</p>
+
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('obj1')">
+                    <span>Objection 1: "Can you just email me?"</span>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="collapsible-content" id="obj1">
+                    <div class="script-box">
+<strong>Response:</strong>
+"I'd be happy to send you information, but honestly, a 10-minute conversation will be way more valuable than an email back-and-forth. [Agent Name] can answer your specific questions in real-time. How about tomorrow at 11 AM?"
+
+<strong>Alternative:</strong>
+"Sure! I'll send over some initial info, but [Agent Name] also has off-market listings that aren't available publicly. A quick call would give you access to those. Can we schedule 15 minutes this week?"
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('obj2')">
+                    <span>Objection 2: "I'm working with another agent"</span>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="collapsible-content" id="obj2">
+                    <div class="script-box">
+<strong>Response:</strong>
+"That's great! Are you under an exclusive agreement with them, or are you still exploring your options?"
+
+[If exclusive] "Got it - best of luck! If anything changes, we're here."
+
+[If not exclusive] "Smart move to compare agents before committing. Would you be open to a second opinion? [Agent Name] might have different insights or access to properties your current agent doesn't."
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('obj3')">
+                    <span>Objection 3: "I'm just browsing/not ready yet"</span>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="collapsible-content" id="obj3">
+                    <div class="script-box">
+<strong>Response:</strong>
+"That's totally normal! Most people start by browsing. When do you think you'll be ready to get more serious - 3 months, 6 months?"
+
+[Get timeframe]
+
+"Perfect! How about I add you to our VIP list so you get early access to new listings? And when you're ready, [Agent Name] will already know what you're looking for. Sound good?"
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('obj4')">
+                    <span>Objection 4: "I need to talk to my [spouse/partner] first"</span>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="collapsible-content" id="obj4">
+                    <div class="script-box">
+<strong>Response:</strong>
+"Of course! Big decisions should be made together. Why don't I schedule a call for both of you? That way [Agent Name] can answer questions for both of you at the same time. Would evenings or weekends work better?"
+
+<strong>Alternative:</strong>
+"I totally understand. How about we schedule a tentative call for [day/time], and if your [spouse] can't make it, we can always reschedule? At least then you'll have a spot on the calendar."
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('obj5')">
+                    <span>Objection 5: "What's your commission rate?"</span>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="collapsible-content" id="obj5">
+                    <div class="script-box">
+<strong>Response:</strong>
+"That's a great question, and [Agent Name] is happy to discuss pricing. But honestly, commission is just one factor - what really matters is net proceeds in your pocket after the sale. [Agent Name] has a track record of getting [X% above asking] because of [aggressive marketing/negotiation skills/etc]. Can we schedule a time for [him/her] to show you the full value proposition?"
+
+<strong>DO NOT quote rates on these calls - that's the agent's job</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FINAL TIPS SECTION -->
+        <div class="section" style="background: linear-gradient(135deg, var(--mint) 0%, var(--cream) 100%);">
+            <h2>🏆 Final Tips for Script Mastery</h2>
+            
+            <div class="tip-box">
+                <strong>✅ DO:</strong>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li>Sound conversational, not robotic</li>
+                    <li>Use the prospect's name 2-3 times per call</li>
+                    <li>Mirror their energy level (excited = be excited, calm = be calm)</li>
+                    <li>Take notes during the call for CRM logging</li>
+                    <li>Confirm email and phone number before ending</li>
+                    <li>Send calendar invite within 5 minutes of booking</li>
+                    <li>Log every call in the CRM with outcome</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>❌ DON'T:</strong>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li>Read word-for-word like a telemarketer</li>
+                    <li>Argue with objections - acknowledge and pivot</li>
+                    <li>Talk over the prospect or interrupt</li>
+                    <li>Sound desperate or pushy</li>
+                    <li>Give pricing or commission details (agent's job)</li>
+                    <li>Make promises the agent can't keep</li>
+                    <li>Leave voicemails longer than 20 seconds</li>
+                </ul>
+            </div>
+
+            <div style="background: white; padding: 2rem; border-radius: 12px; margin-top: 2rem; border: 3px solid var(--sage);">
+                <h3 style="color: var(--sage); margin-bottom: 1rem;">📊 Success Metrics to Track</h3>
+                <div class="qualification-grid">
+                    <div class="qualification-card">
+                        <div class="qual-title">Contact Rate</div>
+                        <p>Goal: 30-40% of leads reached<br><em>If lower: adjust call times</em></p>
+                    </div>
+                    <div class="qualification-card">
+                        <div class="qual-title">Appointment Rate</div>
+                        <p>Goal: 20-30% of contacts booked<br><em>If lower: improve qualifying</em></p>
+                    </div>
+                    <div class="qualification-card">
+                        <div class="qual-title">Show Rate</div>
+                        <p>Goal: 70%+ attend appointments<br><em>If lower: better confirmation</em></p>
+                    </div>
+                    <div class="qualification-card">
+                        <div class="qual-title">Call Duration</div>
+                        <p>Goal: 2-4 minutes average<br><em>Too long: tighten script</em></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div style="text-align: center; padding: 2rem; color: var(--sage); margin-top: 2rem;">
+            <p style="font-size: 1.1rem; font-weight: 600;">🎯 Module AS-3 Complete</p>
+            <p style="margin-top: 0.5rem;">Practice these scripts daily. Track your metrics. Adjust based on results.</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">© 2024 Buzzworks VA - Real Estate Training Program</p>
+        </div>
+
+    </div>
+</body>
+</html>
